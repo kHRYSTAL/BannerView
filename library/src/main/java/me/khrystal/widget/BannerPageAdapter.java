@@ -65,7 +65,7 @@ public class BannerPageAdapter<T> extends PagerAdapter {
             holder = (BannerView.BannerHolder<T>) view.getTag(R.id.banner_item_tag);
         }
         if (mData != null && !mData.isEmpty()) {
-            holder.updateUI(container.getContext(), position, mData.get(position));
+            holder.updateUI(container.getContext(), position, mData.get(viewPager.getRealItem()));
         }
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +89,16 @@ public class BannerPageAdapter<T> extends PagerAdapter {
         return view == object;
     }
 
+    public void setCanLoop(boolean canLoop) {
+        this.canLoop = canLoop;
+    }
+
+    public void setViewPager(BannerViewPager viewPager) {
+        this.viewPager = viewPager;
+    }
+
     public void setOnItemClickListener(BannerView.OnItemClickListener onItemClickListener) {
         this.clickListener = onItemClickListener;
     }
+
 }

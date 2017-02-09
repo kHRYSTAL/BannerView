@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,7 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 /**
@@ -86,8 +89,23 @@ public class BannerView<T> extends LinearLayout {
         adSwitchTask = new AdSwitchTask(this);
     }
 
+    /**
+     * instead Scroller
+     */
     private void initViewPagerScroll() {
-
+        Field mScroller = null;
+        try {
+            mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            scroller = new ViewPagerScroller(viewPager.getContext());
+            mScroller.set(viewPager, scroller);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     public BannerView setPages(BannerView.BannerHolder holder, List<T> data) {
@@ -247,11 +265,89 @@ public class BannerView<T> extends LinearLayout {
         removeCallbacks(adSwitchTask);
     }
 
-    public void setCanScroll(boolean manualPageable) {
+    /**
+     * page transformer
+     */
+    public BannerView setPageTransformer(ViewPager.PageTransformer transformer) {
+        viewPager.setPageTransformer(true, transformer);
+        return this;
     }
 
+    /**
+     * set viewpager can scroll
+     * todo
+     * @param canScroll
+     */
+    public void setCanScroll(boolean canScroll) {
+    }
 
+    /**
+     * isCanScroll
+     */
+    public boolean isCanScroll() {
+        return true;
+    }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL
+                || action == MotionEvent.ACTION_OUTSIDE) {
+            if (canTurn)
+                startTurning();
+        } else if (action == MotionEvent.ACTION_DOWN) {
+            if (canTurn)
+                stopTurning();
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 
-    
+    public int getCurrentItem() {
+        if (viewPager != null) {
+            return viewPager.getRealItem();
+        }
+        return -1;
+    }
+
+    @Deprecated
+    public void setCurrentItem(int index) {
+        if (viewPager != null) {
+            viewPager.setCurrentItem(index);
+        }
+    }
+
+    public ViewPager.OnPageChangeListener getOnPageChangeListener() {
+        return onPageChangeListener;
+    }
+
+    public BannerView setOnPageChangeListener(ViewPager.OnPageChangeListener onPageChangeListener) {
+        this.onPageChangeListener = onPageChangeListener;
+        if (pageChangeListener != null)
+            pageChangeListener.setOnPageChangeListener(onPageChangeListener);
+        else
+            viewPager.addOnPageChangeListener(onPageChangeListener);
+        return this;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        if (pageAdapter != null)
+            pageAdapter.setOnItemClickListener(onItemClickListener);
+    }
+
+    public void setScrollDuration(int scrollDuration) {
+        scroller.setScrollDuration(scrollDuration);
+    }
+
+    public int getScrollDuration() {
+        return scroller.getScrollDuration();
+    }
+
+    public BannerViewPager getViewPager() {
+        return viewPager;
+    }
+
+    public void setCanLoop(boolean canLoop) {
+        this.canLoop = canLoop;
+        viewPager.setCanLoop(canLoop);
+    }
 }
