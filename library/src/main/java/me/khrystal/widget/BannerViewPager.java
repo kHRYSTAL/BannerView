@@ -35,7 +35,7 @@ public class BannerViewPager extends ViewPager {
     }
 
     private void init() {
-        super.setOnPageChangeListener(onPageChangeListener);
+        super.addOnPageChangeListener(onPageChangeListener);
     }
 
     public void setAdapter(PagerAdapter adapter, boolean canLoop) {
@@ -90,7 +90,7 @@ public class BannerViewPager extends ViewPager {
     }
 
     @Override
-    public void setOnPageChangeListener(OnPageChangeListener listener) {
+    public void addOnPageChangeListener(OnPageChangeListener listener) {
         mOuterPageChangeListener = listener;
     }
 
