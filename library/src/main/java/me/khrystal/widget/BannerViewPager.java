@@ -6,37 +6,13 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-/**
- * usage:
- * author: kHRYSTAL
- * create time: 17/2/6
- * update time:
- * email: 723526676@qq.com
- */
 
 public class BannerViewPager extends ViewPager {
-
     OnPageChangeListener mOuterPageChangeListener;
     private BannerPageAdapter mAdapter;
 
     private boolean isCanScroll = true;
     private boolean canLoop = true;
-    private float oldX = 0, newX = 0;
-    private static final float SENS = 5;
-
-    public BannerViewPager(Context context) {
-        super(context);
-        init();
-    }
-
-    public BannerViewPager(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    private void init() {
-        super.addOnPageChangeListener(onPageChangeListener);
-    }
 
     public void setAdapter(PagerAdapter adapter, boolean canLoop) {
         mAdapter = (BannerPageAdapter) adapter;
@@ -63,7 +39,8 @@ public class BannerViewPager extends ViewPager {
         this.isCanScroll = isCanScroll;
     }
 
-
+    private float oldX = 0, newX = 0;
+    private static final float sens = 5;
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -90,22 +67,23 @@ public class BannerViewPager extends ViewPager {
     }
 
     @Override
-    public void addOnPageChangeListener(OnPageChangeListener listener) {
+    public void setOnPageChangeListener(OnPageChangeListener listener) {
         mOuterPageChangeListener = listener;
     }
 
-    public boolean isCanLoop() {
-        return canLoop;
+
+    public BannerViewPager(Context context) {
+        super(context);
+        init();
     }
 
-    public void setCanLoop(boolean canLoop) {
-        this.canLoop = canLoop;
-        if (canLoop == false) {
-            setCurrentItem(getRealItem(), false);
-        }
-        if (mAdapter == null) return;
-        mAdapter.setCanLoop(canLoop);
-        mAdapter.notifyDataSetChanged();
+    public BannerViewPager(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    private void init() {
+        super.setOnPageChangeListener(onPageChangeListener);
     }
 
     private OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
@@ -150,6 +128,18 @@ public class BannerViewPager extends ViewPager {
         }
     };
 
+    public boolean isCanLoop() {
+        return canLoop;
+    }
 
+    public void setCanLoop(boolean canLoop) {
+        this.canLoop = canLoop;
+        if (canLoop == false) {
+            setCurrentItem(getRealItem(), false);
+        }
+        if (mAdapter == null) return;
+        mAdapter.setCanLoop(canLoop);
+        mAdapter.notifyDataSetChanged();
+    }
 
 }

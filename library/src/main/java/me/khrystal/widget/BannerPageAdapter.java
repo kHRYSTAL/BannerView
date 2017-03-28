@@ -4,29 +4,20 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import java.util.List;
 
 /**
- * usage:
- * author: kHRYSTAL
- * create time: 17/2/8
- * update time:
- * email: 723526676@qq.com
+ * banner ViewPager page adapter
  */
-
 public class BannerPageAdapter<T> extends PagerAdapter {
-
-    protected List<T> mData;
+    private static final String TAG = "BannerPagerAdapter";
+    protected List<T> mDatas;
     protected BannerView.BannerHolder holderCreator;
     private boolean canLoop = true;
     private BannerViewPager viewPager;
-    private final int MULTIPLE_COUNT = 500;
+    private final int MULTIPLE_COUNT = 300;
     private BannerView.OnItemClickListener clickListener;
-    
-    public BannerPageAdapter(BannerView.BannerHolder holder, List<T> data) {
-        this.holderCreator = holder;
-        this.mData = data;
-    }
 
     public int toRealPosition(int position) {
         int realCount = getRealCount();
@@ -42,7 +33,7 @@ public class BannerPageAdapter<T> extends PagerAdapter {
     }
 
     public int getRealCount() {
-        return mData == null ? 0 : mData.size();
+        return mDatas == null ? 0 : mDatas.size();
     }
 
     @Override
@@ -54,34 +45,24 @@ public class BannerPageAdapter<T> extends PagerAdapter {
         return view;
     }
 
-    @SuppressWarnings("unchecked")
-    public View getView(final int position, View view, ViewGroup container) {
-        BannerView.BannerHolder holder = null;
-        if (view == null) {
-            holder = holderCreator;
-            view = holder.createView(container.getContext());
-            view.setTag(R.id.banner_item_tag, holder);
-        } else {
-            holder = (BannerView.BannerHolder<T>) view.getTag(R.id.banner_item_tag);
-        }
-        if (mData != null && !mData.isEmpty()) {
-            holder.updateUI(container.getContext(), position, mData.get(viewPager.getRealItem()));
-        }
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (clickListener != null && viewPager != null) {
-                    clickListener.onItemClick(position);
-                }
-            }
-        });
-        return view;
-    }
-
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         View view = (View) object;
         container.removeView(view);
+    }
+
+    @Override
+    public void finishUpdate(ViewGroup container) {
+        int position = viewPager.getCurrentItem();
+        if (position == 0) {
+            position = viewPager.getFristItem();
+        } else if (position == getCount() - 1) {
+            position = viewPager.getLastItem();
+        }
+        try {
+            viewPager.setCurrentItem(position, false);
+        } catch (IllegalStateException e) {
+        }
     }
 
     @Override
@@ -97,8 +78,34 @@ public class BannerPageAdapter<T> extends PagerAdapter {
         this.viewPager = viewPager;
     }
 
+    public BannerPageAdapter(BannerView.BannerHolder holder, List<T> datas) {
+        this.holderCreator = holder;
+        this.mDatas = datas;
+    }
+
+    public View getView(int position, View view, ViewGroup container) {
+        BannerView.BannerHolder holder;
+        if (view == null) {
+            holder = holderCreator;
+            view = holder.createView(container.getContext());
+            view.setTag(R.id.banner_item_tag, holder);
+        } else {
+            holder = (BannerView.BannerHolder<T>) view.getTag(R.id.banner_item_tag);
+        }
+        if (mDatas != null && !mDatas.isEmpty())
+            holder.UpdateUI(container.getContext(), position, mDatas.get(position));
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (clickListener != null && viewPager != null) {
+                    clickListener.onItemClick(viewPager.getRealItem());
+                }
+            }
+        });
+        return view;
+    }
+
     public void setOnItemClickListener(BannerView.OnItemClickListener onItemClickListener) {
         this.clickListener = onItemClickListener;
     }
-
 }
