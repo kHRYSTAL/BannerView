@@ -3,6 +3,7 @@ package me.khrystal.bannerview;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,8 +34,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int i = 0; i < 5; i++) {
             datas.add("" + i + "asasasasa");
         }
-        ViewGroup container = (ViewGroup) findViewById(R.id.indicatorContainer);
+        ViewGroup container = (ViewGroup) findViewById(R.id.ll);
         bannerView.setIndicatorViewGroup(container);
+        Log.e("Main", bannerContainer.toString());
+
+
         bannerView.setPageIndicator(new int[]{R.drawable.bg_circle_white, R.drawable.bg_circle_white_60});
         bannerView.setPages(new BannerView.BannerHolder<String>() {
             private TextView textView;

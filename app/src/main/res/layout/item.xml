@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/itemBanner"
+    android:background="@drawable/bg_daodu_card"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="206dp">
-    <ImageView
+    <me.khrystal.bannerview.RoundAngleImageView
         android:scaleType="centerCrop"
         android:background="@color/colorAccent"
+        app:roundHeights="3dp"
+        app:roundWidths="3dp"
+        app:leftUp="true"
+        app:leftDown="false"
+        app:rightUp="true"
+        app:rightDown="false"
         android:layout_width="match_parent"
         android:layout_height="120dp" />
     <TextView

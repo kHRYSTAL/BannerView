@@ -6,6 +6,7 @@ import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.PageTransformer;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -160,6 +161,7 @@ public class BannerView<T> extends LinearLayout {
      */
     public BannerView setPageIndicator(int[] page_indicatorId) {
         loPageTurningPoint.removeAllViews();
+        Log.e("Main", loPageTurningPoint.toString());
         mPointViews.clear();
         this.page_indicatorId = page_indicatorId;
         if (mDatas == null) return this;
@@ -186,6 +188,9 @@ public class BannerView<T> extends LinearLayout {
 
     public BannerView setIndicatorViewGroup(ViewGroup viewGroup) {
         if (viewGroup != null)
+            loPageTurningPoint.removeAllViews();
+            loPageTurningPoint.setVisibility(GONE);
+            loPageTurningPoint = null;
             loPageTurningPoint = viewGroup;
         return this;
     }
