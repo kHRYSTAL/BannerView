@@ -182,14 +182,19 @@ public class BannerView<T> extends LinearLayout {
         pageChangeListener.onPageSelected(viewPager.getRealItem());
         if (onPageChangeListener != null)
             pageChangeListener.setOnPageChangeListener(onPageChangeListener);
-
+        if (mDatas.size() >= 2) {
+            loPageTurningPoint.setVisibility(VISIBLE);
+        } else {
+            // 复用时由多变少 会导致右侧view露边时显示
+            viewPager.requestLayout();
+            loPageTurningPoint.setVisibility(INVISIBLE);
+        }
         return this;
     }
 
     public BannerView setIndicatorViewGroup(ViewGroup viewGroup) {
         if (viewGroup != null)
             loPageTurningPoint.removeAllViews();
-            loPageTurningPoint.setVisibility(GONE);
             loPageTurningPoint = null;
             loPageTurningPoint = viewGroup;
         return this;
@@ -234,6 +239,13 @@ public class BannerView<T> extends LinearLayout {
      */
     public void setTurningTime(long time) {
         this.autoTurningTime = time;
+    }
+
+    /**
+     * 设置支持自动滚动 用于列表复用
+     */
+    public void setSupportTurning(boolean turning) {
+        this.turning = turning;
     }
 
     /***
