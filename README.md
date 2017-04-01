@@ -1,1 +1,1 @@
-[test click](zhisland://com.zhisland/http://mp.zhisland.com/wmp/user/3/channel/show/hisList?pageNo=1&pageSize=20)
+[test click](http://mp.zhisland.com/wmp/user/3/channel/show/hisList?pageNo=1&pageSize=20)
